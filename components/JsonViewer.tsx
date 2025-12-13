@@ -243,11 +243,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({
     keys = keys.filter(k => value[k] !== null);
   }
 
-  // Natural Sort for keys (so Custom1, Custom2, Custom10 appear in numeric order)
-  if (!isArray) {
-    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-    keys.sort(collator.compare);
-  }
+  // REMOVED SORTING HERE to preserve original Raw JSON order
 
   const isEmpty = keys.length === 0;
 
