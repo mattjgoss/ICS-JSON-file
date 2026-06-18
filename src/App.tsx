@@ -1,44 +1,55 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import InputSection from './components/InputSection';
 import JsonViewer from './components/JsonViewer';
-import AnalysisPanel from './components/AnalysisPanel';
-import { ViewMode, AnalysisResult } from './types';
-import { analyzeConcurJson } from './services/geminiService';
-import { Code2, ListTree, Activity, ExternalLink } from 'lucide-react';
+import { ViewMode } from './types';
+import { Code2, ListTree, Activity, ExternalLink, AlertCircle, X } from 'lucide-react';
 
 const App: React.FC = () => {
   const [jsonContent, setJsonContent] = useState<any | null>(null);
   const [rawString, setRawString] = useState<string>('');
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.RAW);
-  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [leftWidth, setLeftWidth] = useState(380); // Default width set to 380px (more visible by default)
+  const [isResizing, setIsResizing] = useState(false);
 
   const handleJsonLoaded = useCallback((json: any, raw: string) => {
     setJsonContent(json);
     setRawString(raw);
     setError(null);
-    setAnalysis(null);
+    setViewMode(ViewMode.TREE);
   }, []);
 
   const handleError = useCallback((msg: string) => {
     setError(msg);
   }, []);
 
-  const handleAnalyze = async () => {
-    if (!rawString) return;
-    setIsAnalyzing(true);
-    setError(null);
-    try {
-      const result = await analyzeConcurJson(rawString);
-      setAnalysis(result);
-    } catch (err: any) {
-      console.error(err);
-      setError(err?.message || 'Failed to analyse JSON. Please try again.');
-    } finally {
-      setIsAnalyzing(false);
+  const startResizing = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+  }, []);
+
+  const stopResizing = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
+  const resize = useCallback((e: MouseEvent) => {
+    if (isResizing) {
+      // Limit the input column width between 280px and 600px
+      const newWidth = Math.max(280, Math.min(600, e.clientX));
+      setLeftWidth(newWidth);
     }
-  };
+  }, [isResizing]);
+
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener('mousemove', resize);
+      window.addEventListener('mouseup', stopResizing);
+    }
+    return () => {
+      window.removeEventListener('mousemove', resize);
+      window.removeEventListener('mouseup', stopResizing);
+    };
+  }, [isResizing, resize, stopResizing]);
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100">
@@ -56,9 +67,6 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="text-xs text-slate-400 hidden sm:block">
-            Powered by Gemini 2.5 Flash
-          </div>
           <a
             href="https://www.covantage.com.au"
             target="_blank"
@@ -72,30 +80,57 @@ const App: React.FC = () => {
       </header>
 
       {/* Main Content Grid */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className={`flex-1 flex overflow-hidden ${isResizing ? 'cursor-col-resize select-none' : ''}`}>
 
         {/* Left Column: Input */}
-        <div className="w-[300px] flex-shrink-0 h-full hidden md:block z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+        <div 
+          style={{ width: `${leftWidth}px` }} 
+          className="flex-shrink-0 h-full hidden md:block z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+        >
           <InputSection onJsonLoaded={handleJsonLoaded} onError={handleError} />
         </div>
 
+        {/* Resizer Splitter Bar */}
+        <div
+          onMouseDown={startResizing}
+          className={`w-1 hover:w-1 bg-slate-200 hover:bg-[#0070F2] cursor-col-resize h-full transition-colors z-20 flex-shrink-0 hidden md:block
+            ${isResizing ? 'bg-[#0070F2]' : ''}`}
+          title="Drag to resize panels"
+        />
+
         {/* Middle Column: JSON Viewer */}
-        <div className="flex-1 flex flex-col min-w-0 bg-white border-r border-slate-200">
-          <div className="border-b border-slate-100 p-2 flex justify-between items-center bg-white">
-            <div className="flex bg-slate-100 p-1 rounded-md">
+        <div className="flex-1 flex flex-col min-w-0 bg-white">
+          {error && (
+            <div className="bg-red-50 border-b border-red-200 text-red-700 px-4 py-2 text-xs flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <AlertCircle size={14} className="text-red-500" />
+                <span>{error}</span>
+              </div>
+              <button 
+                onClick={() => setError(null)} 
+                className="text-red-400 hover:text-red-600 transition-colors p-1"
+                title="Dismiss"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
+
+          <div className="border-b border-slate-100 p-2.5 flex justify-between items-center bg-white">
+            <div className="flex bg-slate-100 p-1.5 rounded-lg">
               <button
                 onClick={() => setViewMode(ViewMode.RAW)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all
+                className={`flex items-center gap-2 px-5 py-2 rounded-md text-sm font-semibold transition-all
                   ${viewMode === ViewMode.RAW ? 'bg-white text-[#0070F2] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
               >
-                <Code2 size={14} /> Raw
+                <Code2 size={16} /> Raw
               </button>
               <button
                 onClick={() => setViewMode(ViewMode.TREE)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-all
+                className={`flex items-center gap-2 px-5 py-2 rounded-md text-sm font-semibold transition-all
                   ${viewMode === ViewMode.TREE ? 'bg-white text-[#0070F2] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
               >
-                <ListTree size={14} /> Tree
+                <ListTree size={16} /> Tree
               </button>
             </div>
             <div className="text-xs text-slate-400 font-mono px-4">
@@ -115,17 +150,6 @@ const App: React.FC = () => {
               <JsonViewer data={jsonContent} mode={viewMode} />
             )}
           </div>
-        </div>
-
-        {/* Right Column: AI Analysis */}
-        <div className="w-[400px] flex-shrink-0 h-full bg-white shadow-[-4px_0_24px_rgba(0,0,0,0.02)] z-10">
-          <AnalysisPanel
-            analysis={analysis}
-            isLoading={isAnalyzing}
-            error={error}
-            onAnalyze={handleAnalyze}
-            hasContent={!!jsonContent}
-          />
         </div>
       </div>
     </div>

@@ -276,39 +276,39 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, mode }) => {
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Toolbar */}
-      <div className="flex items-center gap-2 p-2 border-b border-slate-100 bg-slate-50/50">
+      <div className="flex items-center gap-3 p-3 border-b border-slate-100 bg-slate-50/50">
         <div className="relative flex-1 max-w-sm">
-          <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-            <Search size={14} className="text-slate-400" />
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <Search size={18} className="text-slate-400" />
           </div>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search keys or values..."
-            className="w-full pl-8 pr-8 py-1.5 text-xs border border-slate-300 rounded-md focus:ring-1 focus:ring-[#0070F2] focus:border-[#0070F2] outline-none transition-shadow"
+            className="w-full pl-10 pr-10 py-2.5 text-sm border border-slate-300 rounded-md focus:ring-1 focus:ring-[#0070F2] focus:border-[#0070F2] outline-none transition-shadow bg-white"
           />
           {searchTerm && (
-            <button onClick={() => setSearchTerm('')} className="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 hover:text-slate-600">
-              <X size={14} />
+            <button onClick={() => setSearchTerm('')} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600">
+              <X size={18} />
             </button>
           )}
         </div>
 
-        <div className="h-4 w-px bg-slate-300 mx-1"></div>
-        <button onClick={() => exportToExcel(data)} className="p-1.5 text-slate-500 hover:text-green-600 hover:bg-white rounded transition-colors flex items-center gap-1" title="Export to Excel">
-          <FileSpreadsheet size={16} />
+        <div className="h-6 w-px bg-slate-300 mx-2"></div>
+        <button onClick={() => exportToExcel(data)} className="p-2.5 text-slate-500 hover:text-green-600 hover:bg-white rounded-md transition-colors flex items-center gap-1.5" title="Export to Excel">
+          <FileSpreadsheet size={20} />
         </button>
-        <div className="h-4 w-px bg-slate-300 mx-1"></div>
-        <button onClick={() => setHideNulls(!hideNulls)} className={`p-1.5 rounded transition-colors ${hideNulls ? 'bg-blue-100 text-[#0070F2]' : 'text-slate-500 hover:text-[#0070F2] hover:bg-white'}`} title={hideNulls ? 'Show Null Values' : 'Hide Null Values'}>
-          <Filter size={16} />
+        <div className="h-6 w-px bg-slate-300 mx-2"></div>
+        <button onClick={() => setHideNulls(!hideNulls)} className={`p-2.5 rounded-md transition-colors ${hideNulls ? 'bg-blue-100 text-[#0070F2]' : 'text-slate-500 hover:text-[#0070F2] hover:bg-white'}`} title={hideNulls ? 'Show Null Values' : 'Hide Null Values'}>
+          <Filter size={20} />
         </button>
-        <div className="h-4 w-px bg-slate-300 mx-1"></div>
-        <button onClick={() => setExpandedKeys(getAllPaths(data))} className="p-1.5 text-slate-500 hover:text-[#0070F2] hover:bg-white rounded transition-colors" title="Expand All">
-          <PlusSquare size={16} />
+        <div className="h-6 w-px bg-slate-300 mx-2"></div>
+        <button onClick={() => setExpandedKeys(getAllPaths(data))} className="p-2.5 text-slate-500 hover:text-[#0070F2] hover:bg-white rounded-md transition-colors" title="Expand All">
+          <PlusSquare size={20} />
         </button>
-        <button onClick={() => setExpandedKeys(new Set(['root']))} className="p-1.5 text-slate-500 hover:text-[#0070F2] hover:bg-white rounded transition-colors" title="Collapse All">
-          <MinusSquare size={16} />
+        <button onClick={() => setExpandedKeys(new Set(['root']))} className="p-2.5 text-slate-500 hover:text-[#0070F2] hover:bg-white rounded-md transition-colors" title="Collapse All">
+          <MinusSquare size={20} />
         </button>
       </div>
 

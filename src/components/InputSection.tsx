@@ -49,6 +49,7 @@ const DEMO_JSON = {
 
 const InputSection: React.FC<InputSectionProps> = ({ onJsonLoaded, onError }) => {
   const [textInput, setTextInput] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processJson = (content: string) => {
@@ -99,6 +100,48 @@ const InputSection: React.FC<InputSectionProps> = ({ onJsonLoaded, onError }) =>
     }
   };
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.json') && !file.name.endsWith('.txt')) {
+      onError('Invalid file type. Only .json and .txt files are accepted.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setTextInput(content);
+      processJson(content);
+    };
+    reader.onerror = () => {
+      onError('Failed to read file.');
+    };
+    reader.readAsText(file);
+  };
+
   const loadDemoData = () => {
     const jsonStr = JSON.stringify(DEMO_JSON, null, 2);
     setTextInput(jsonStr);
@@ -119,15 +162,30 @@ const InputSection: React.FC<InputSectionProps> = ({ onJsonLoaded, onError }) =>
       </div>
 
       <div className="p-4 flex flex-col gap-4 flex-1">
-        {/* File Upload Trigger */}
+        {/* File Upload / Drag and Drop Zone */}
         <div
-          className="border-2 border-dashed border-slate-200 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:border-[#0070F2] hover:bg-blue-50 transition-colors cursor-pointer group"
+          className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center text-center transition-colors cursor-pointer group
+            ${isDragging 
+              ? 'border-[#0070F2] bg-blue-50/50' 
+              : 'border-slate-200 hover:border-[#0070F2] hover:bg-blue-50/20'
+            }`}
           onClick={() => fileInputRef.current?.click()}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
         >
-          <div className="bg-slate-100 p-3 rounded-full mb-3 group-hover:bg-white text-slate-500 group-hover:text-[#0070F2] transition-colors">
+          <div className={`p-3 rounded-full mb-3 transition-colors
+            ${isDragging 
+              ? 'bg-[#0070F2] text-white' 
+              : 'bg-slate-100 group-hover:bg-white text-slate-500 group-hover:text-[#0070F2]'
+            }`}
+          >
             <Upload size={24} />
           </div>
-          <p className="text-sm font-medium text-slate-700">Click to upload JSON file</p>
+          <p className="text-sm font-medium text-slate-700">
+            {isDragging ? 'Drop your file here!' : 'Click or drag file to upload'}
+          </p>
           <p className="text-xs text-slate-400 mt-1">Accepts .json, .txt</p>
           <input
             type="file"
