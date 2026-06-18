@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import InputSection from './components/InputSection';
 import JsonViewer from './components/JsonViewer';
 import { ViewMode } from './types';
-import { Code2, ListTree, Activity, ExternalLink, AlertCircle, X } from 'lucide-react';
+import { Code2, ListTree, ExternalLink, AlertCircle, X } from 'lucide-react';
 
 const App: React.FC = () => {
   const [jsonContent, setJsonContent] = useState<any | null>(null);
@@ -54,16 +54,23 @@ const App: React.FC = () => {
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100">
       {/* Header */}
-      <header className="bg-[#004071] text-white px-6 py-3 flex items-center justify-between shadow-md z-20 flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#0070F2] to-[#F0AB00] rounded flex items-center justify-center">
-            <Activity className="text-white w-5 h-5" />
-          </div>
+      <header className="bg-teal-950 text-white px-6 py-3 flex items-center justify-between shadow-md z-20 flex-shrink-0 border-b border-teal-900">
+        <div className="flex items-center gap-4">
+          <img 
+            src="/tools/JSON/logo2.png" 
+            alt="Covantage Logo" 
+            className="h-8 object-contain"
+            onError={(e) => {
+              // Fallback to text logo if image fails to load
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+          <div className="h-6 w-px bg-teal-800 hidden sm:block"></div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight">
-              SAP Concur <span className="text-[#F0AB00]">JSON Explainer</span>
+            <h1 className="text-lg font-bold tracking-tight text-white">
+              Covantage ICS <span className="text-amber-500 font-semibold">JSON Explainer</span>
             </h1>
-            <p className="text-[10px] text-slate-300">ICS Integration Connector Utility</p>
+            <p className="text-[10px] text-teal-300">ICS Integration Connector Utility</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -71,7 +78,7 @@ const App: React.FC = () => {
             href="https://www.covantage.com.au"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs text-[#F0AB00] hover:text-white transition-colors font-medium"
+            className="flex items-center gap-1.5 text-xs text-amber-500 hover:text-white transition-colors font-semibold"
           >
             <ExternalLink size={14} />
             covantage.com.au
