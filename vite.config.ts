@@ -1,11 +1,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    open: true, // Automatically open the app in the browser
-    port: 3000,
-  }
+  base: '/tools/JSON/',
+  plugins: [
+    tailwindcss(),
+    react(),
+  ],
+  build: {
+    outDir: 'dist',
+  },
 });

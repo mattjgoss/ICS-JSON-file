@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-sans: 'Inter', sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+
+  /* SAP / Covantage brand colours */
+  --color-sap-blue: #0070F2;
+  --color-sap-dark: #004071;
+  --color-sap-gold: #F0AB00;
+}
+
+body {
+  background-color: #f8fafc;
+  font-family: var(--font-family-sans);
+}
+
+/* Custom scrollbar for JSON viewer */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

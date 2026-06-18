@@ -1,5 +1,5 @@
 {
-  "name": "SAP Concur ICS JSON Explainer",
-  "description": "A developer tool to visualize, parse, and explain SAP Concur JSON payloads sent to the SAP ICS connector using Gemini AI.",
+  "name": "Covantage SAP Concur ICS JSON Explainer Tool",
+  "description": "A developer tool to visualize, parse, and explain SAP Concur JSON payloads sent to the SAP ICS connector.",
   "requestFramePermissions": []
 }
