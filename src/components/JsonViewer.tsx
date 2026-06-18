@@ -295,20 +295,26 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, mode }) => {
           )}
         </div>
 
-        <div className="h-6 w-px bg-slate-300 mx-2"></div>
-        <button onClick={() => exportToExcel(data)} className="p-2.5 text-slate-500 hover:text-green-600 hover:bg-white rounded-md transition-colors flex items-center gap-1.5" title="Export to Excel">
-          <FileSpreadsheet size={20} />
+        <div className="h-6 w-px bg-slate-300 mx-1"></div>
+        <button onClick={() => exportToExcel(data)} className="p-2 text-slate-600 hover:text-green-600 hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1.5" title="Export to Excel">
+          <FileSpreadsheet size={16} />
+          <span className="text-xs font-semibold hidden sm:inline">Export</span>
         </button>
-        <div className="h-6 w-px bg-slate-300 mx-2"></div>
-        <button onClick={() => setHideNulls(!hideNulls)} className={`p-2.5 rounded-md transition-colors ${hideNulls ? 'bg-blue-100 text-[#0070F2]' : 'text-slate-500 hover:text-[#0070F2] hover:bg-white'}`} title={hideNulls ? 'Show Null Values' : 'Hide Null Values'}>
-          <Filter size={20} />
+        <div className="h-6 w-px bg-slate-300 mx-1"></div>
+        <button onClick={() => setHideNulls(!hideNulls)} className={`p-2 rounded-md transition-colors flex items-center gap-1.5 ${hideNulls ? 'bg-blue-100 text-[#0070F2]' : 'text-slate-600 hover:text-[#0070F2] hover:bg-slate-100'}`} title={hideNulls ? 'Show Null Values' : 'Hide Null Values'}>
+          <Filter size={16} />
+          <span className="text-xs font-semibold hidden sm:inline">
+            {hideNulls ? 'Show Nulls' : 'Hide Nulls'}
+          </span>
         </button>
-        <div className="h-6 w-px bg-slate-300 mx-2"></div>
-        <button onClick={() => setExpandedKeys(getAllPaths(data))} className="p-2.5 text-slate-500 hover:text-[#0070F2] hover:bg-white rounded-md transition-colors" title="Expand All">
-          <PlusSquare size={20} />
+        <div className="h-6 w-px bg-slate-300 mx-1"></div>
+        <button onClick={() => setExpandedKeys(getAllPaths(data))} className="p-2 text-slate-600 hover:text-[#0070F2] hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1.5" title="Expand All">
+          <PlusSquare size={16} />
+          <span className="text-xs font-semibold hidden sm:inline">Expand All</span>
         </button>
-        <button onClick={() => setExpandedKeys(new Set(['root']))} className="p-2.5 text-slate-500 hover:text-[#0070F2] hover:bg-white rounded-md transition-colors" title="Collapse All">
-          <MinusSquare size={20} />
+        <button onClick={() => setExpandedKeys(new Set(['root']))} className="p-2 text-slate-600 hover:text-[#0070F2] hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1.5" title="Collapse All">
+          <MinusSquare size={16} />
+          <span className="text-xs font-semibold hidden sm:inline">Collapse All</span>
         </button>
       </div>
 
